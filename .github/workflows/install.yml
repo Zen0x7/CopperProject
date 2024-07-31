@@ -44,7 +44,12 @@ jobs:
           BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
       - name: configure
-        run: cmake -Stest -Bbuild -DTEST_INSTALLED_VERSION=1
+        run: |
+          cmake -Stest -Bbuild -DTEST_INSTALLED_VERSION=1\
+            -DBoost_INCLUDE_DIR=${{steps.install-boost.outputs.BOOST_ROOT}}/include\
+            -DBoost_LIBRARY_DIRS=${{steps.install-boost.outputs.BOOST_ROOT}}/lib
+        env:
+          BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
       - name: build
         run: cmake --build build --config Debug -j4
