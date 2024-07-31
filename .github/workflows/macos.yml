@@ -16,7 +16,7 @@ env:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-13
 
     steps:
       - uses: actions/checkout@v3
@@ -26,7 +26,7 @@ jobs:
         id: install-boost
         with:
           boost_version: 1.85.0
-          platform_version: 14
+          platform_version: 13
 
       - uses: actions/cache@v3
         with:
