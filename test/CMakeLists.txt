@@ -25,9 +25,9 @@ else()
 endif()
 
 find_package(
-        Boost 1.85.0
-        COMPONENTS json thread program_options random
-        REQUIRED
+  Boost 1.85.0
+  COMPONENTS json thread program_options random
+  REQUIRED
 )
 
 # ---- Create binary ----
