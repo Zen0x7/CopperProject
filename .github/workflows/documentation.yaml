@@ -11,9 +11,16 @@ env:
 jobs:
   build:
     name: Build and publish documentation
-    runs-on: macos-latest
+    runs-on: macos-13
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install boost
+        uses: MarkusJx/install-boost@v2.4.5
+        id: install-boost
+        with:
+          boost_version: 1.85.0
+          platform_version: 13
 
       - uses: actions/cache@v3
         with:
@@ -27,8 +34,12 @@ jobs:
 
       - name: Build
         run: |
-          cmake -Sdocumentation -Bbuild
+          cmake -Sdocumentation -Bbuild\
+            -DBoost_INCLUDE_DIR=${{steps.install-boost.outputs.BOOST_ROOT}}/include\
+            -DBoost_LIBRARY_DIRS=${{steps.install-boost.outputs.BOOST_ROOT}}/lib
           cmake --build build --target GenerateDocs
+        env:
+          BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
       - name: Publish
         uses: peaceiris/actions-gh-pages@v3
