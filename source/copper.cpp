@@ -1,11 +1,11 @@
-#include <elephant/elephant.h>
+#include <copper/copper.h>
 #include <fmt/format.h>
 
-using namespace elephant;
+using namespace copper;
 
-Elephant::Elephant(std::string _name) : name(std::move(_name)) {}
+Copper::Copper(std::string _name) : name(std::move(_name)) {}
 
-std::string Elephant::greet(LanguageCode lang) const {
+std::string Copper::greet(LanguageCode lang) const {
   switch (lang) {
     default:
     case LanguageCode::EN:

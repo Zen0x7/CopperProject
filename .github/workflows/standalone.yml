@@ -44,4 +44,4 @@ jobs:
         run: cmake --build build -j4
 
       - name: run
-        run: ./build/Elephant
+        run: ./build/Copper

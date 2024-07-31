@@ -2,23 +2,23 @@
 
 #include <string>
 
-namespace elephant {
+namespace copper {
 
-  /**  Language codes to be used with the Elephant class */
+  /**  Language codes to be used with the Copper class */
   enum class LanguageCode { EN, DE, ES, FR };
 
   /**
    * @brief A class for saying hello in multiple languages
    */
-  class Elephant {
+  class Copper {
     std::string name;
 
   public:
     /**
-     * @brief Creates a new elephant
+     * @brief Creates a new copper
      * @param name the name to greet
      */
-    Elephant(std::string name);
+    Copper(std::string name);
 
     /**
      * @brief Creates a localized string containing the greeting
@@ -28,4 +28,4 @@ namespace elephant {
     std::string greet(LanguageCode lang = LanguageCode::EN) const;
   };
 
-}  // namespace elephant
+}  // namespace copper

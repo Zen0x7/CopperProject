@@ -1,5 +1,5 @@
-#include <elephant/elephant.h>
-#include <elephant/version.h>
+#include <copper/copper.h>
+#include <copper/version.h>
 
 #include <cxxopts.hpp>
 #include <iostream>
@@ -7,11 +7,11 @@
 #include <unordered_map>
 
 auto main(int argc, char** argv) -> int {
-  const std::unordered_map<std::string, elephant::LanguageCode> languages{
-      {"en", elephant::LanguageCode::EN},
-      {"de", elephant::LanguageCode::DE},
-      {"es", elephant::LanguageCode::ES},
-      {"fr", elephant::LanguageCode::FR},
+  const std::unordered_map<std::string, copper::LanguageCode> languages{
+      {"en", copper::LanguageCode::EN},
+      {"de", copper::LanguageCode::DE},
+      {"es", copper::LanguageCode::ES},
+      {"fr", copper::LanguageCode::FR},
   };
 
   cxxopts::Options options(*argv, "A program to welcome the world!");
@@ -36,7 +36,7 @@ auto main(int argc, char** argv) -> int {
   }
 
   if (result["version"].as<bool>()) {
-    std::cout << "Elephant, version " << ELEPHANT_VERSION << std::endl;
+    std::cout << "Copper, version " << COPPER_VERSION << std::endl;
     return 0;
   }
 
@@ -46,8 +46,8 @@ auto main(int argc, char** argv) -> int {
     return 1;
   }
 
-  elephant::Elephant elephant(name);
-  std::cout << elephant.greet(langIt->second) << std::endl;
+  copper::Copper copper(name);
+  std::cout << copper.greet(langIt->second) << std::endl;
 
   return 0;
 }

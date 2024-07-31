@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14...3.22)
 
-project(ElephantStandalone LANGUAGES CXX)
+project(CopperStandalone LANGUAGES CXX)
 
 # --- Import tools ----
 
@@ -16,7 +16,7 @@ CPMAddPackage(
   OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO" "CXXOPTS_ENABLE_INSTALL YES"
 )
 
-CPMAddPackage(NAME Elephant SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
+CPMAddPackage(NAME Copper SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 
 # ---- Create standalone executable ----
 
@@ -24,6 +24,6 @@ file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 
 add_executable(${PROJECT_NAME} ${sources})
 
-set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "Elephant")
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "Copper")
 
-target_link_libraries(${PROJECT_NAME} Elephant::Elephant cxxopts)
+target_link_libraries(${PROJECT_NAME} Copper::Copper cxxopts)
