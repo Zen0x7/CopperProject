@@ -47,7 +47,7 @@ if(NOT TEST_INSTALLED_VERSION)
   endif()
 endif()
 
-# ---- Add CopperTests -----
+# ----- Add CopperTests -----
 
 enable_testing()
 
