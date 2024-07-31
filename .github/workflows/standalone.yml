@@ -15,10 +15,17 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install boost
+        uses: MarkusJx/install-boost@v2.4.5
+        id: install-boost
+        with:
+          boost_version: 1.85.0
+          platform_version: 22.04
 
       - uses: actions/cache@v3
         with:
@@ -26,7 +33,12 @@ jobs:
           key: ${{ github.workflow }}-cpm-modules-${{ hashFiles('**/CMakeLists.txt', '**/*.cmake') }}
 
       - name: configure
-        run: cmake -Sstandalone -Bbuild -DCMAKE_BUILD_TYPE=Debug
+        run: |
+          cmake -Sstandalone -Bbuild -DCMAKE_BUILD_TYPE=Debug\
+            -DBoost_INCLUDE_DIR=${{steps.install-boost.outputs.BOOST_ROOT}}/include\
+            -DBoost_LIBRARY_DIRS=${{steps.install-boost.outputs.BOOST_ROOT}}/lib
+        env:
+          BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
       - name: build
         run: cmake --build build -j4
