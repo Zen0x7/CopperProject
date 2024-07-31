@@ -1,5 +1,5 @@
-#include <fmt/format.h>
 #include <elephant/elephant.h>
+#include <fmt/format.h>
 
 using namespace elephant;
 
