@@ -24,11 +24,17 @@ else()
   CPMAddPackage(NAME Elephant SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 endif()
 
+find_package(
+  Boost 1.85.0
+  COMPONENTS json thread program_options random
+  REQUIRED
+)
+
 # ---- Create binary ----
 
 file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} doctest::doctest Elephant::Elephant)
+target_link_libraries(${PROJECT_NAME} doctest::doctest Elephant::Elephant ${Boost_LIBRARIES})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
 
 # enable compiler warnings
