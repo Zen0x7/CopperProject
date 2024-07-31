@@ -8,6 +8,9 @@ on:
 env:
   CPM_SOURCE_CACHE: ${{ github.workspace }}/cpm_modules
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build and publish documentation
