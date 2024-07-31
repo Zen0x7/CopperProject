@@ -1,6 +1,6 @@
-#include <doctest/doctest.h>
 #include <copper/copper.h>
 #include <copper/version.h>
+#include <doctest/doctest.h>
 
 #include <string>
 
