@@ -20,10 +20,16 @@ CPMAddPackage(NAME Copper SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 
 # ---- Create standalone executable ----
 
+find_package(
+  Boost 1.85.0
+  COMPONENTS json thread program_options random
+  REQUIRED
+)
+
 file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 
 add_executable(${PROJECT_NAME} ${sources})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "Copper")
 
-target_link_libraries(${PROJECT_NAME} Copper::Copper cxxopts)
+target_link_libraries(${PROJECT_NAME} Copper::Copper cxxopts ${Boost_LIBRARIES})
