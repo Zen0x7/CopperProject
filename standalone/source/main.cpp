@@ -1,4 +1,6 @@
 #include <copper/copper.h>
+#include <copper/state.h>
+#include <copper/state_container.h>
 #include <copper/version.h>
 
 #include <cxxopts.hpp>
