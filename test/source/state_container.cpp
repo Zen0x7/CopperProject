@@ -1,7 +1,6 @@
 #include <copper/state_container.h>
 #include <doctest/doctest.h>
 
-
 TEST_CASE("State container") {
   using namespace copper;
   auto const first_instance = state_container::get_instance();

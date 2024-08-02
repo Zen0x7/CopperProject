@@ -1,6 +1,6 @@
 #include <copper/state_container.h>
 
-std::shared_ptr<copper::state> copper::state_container::instance { nullptr };
+std::shared_ptr<copper::state> copper::state_container::instance{nullptr};
 std::mutex copper::state_container::mutex_;
 
 std::shared_ptr<copper::state> copper::state_container::get_instance() {

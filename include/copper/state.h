@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include <boost/uuid/uuid_generators.hpp>
+#include <memory>
 
 namespace copper {
   class state : public std::enable_shared_from_this<state> {
@@ -12,4 +12,4 @@ namespace copper {
 
     boost::uuids::uuid get_id() const { return id_; }
   };
-} // namespace copper
+}  // namespace copper
