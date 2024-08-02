@@ -3,9 +3,6 @@
 #include <memory>
 #include <boost/uuid/uuid_generators.hpp>
 
-
-
-
 namespace copper {
   class state : public std::enable_shared_from_this<state> {
     boost::uuids::uuid id_;
