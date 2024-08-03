@@ -41,8 +41,9 @@ void copper::listener::on_accept(boost::beast::error_code error,
 
   boost::make_shared<http_session>(std::move(socket), state_)->run();
 
-  acceptor_.async_accept(make_strand(io_context_), boost::beast::bind_front_handler(
-                                                       &listener::on_accept, shared_from_this()));
+  acceptor_.async_accept(
+      boost::asio::make_strand(io_context_),
+      boost::beast::bind_front_handler(&listener::on_accept, shared_from_this()));
 }
 
 void copper::listener::run() {
