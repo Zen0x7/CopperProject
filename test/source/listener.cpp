@@ -7,6 +7,7 @@
 #include <boost/asio/ip/address.hpp>
 #include <boost/smart_ptr/make_shared_object.hpp>
 #include <boost/thread.hpp>
+#include <thread>
 
 TEST_CASE("Serve") {
   using namespace copper;
@@ -51,14 +52,14 @@ TEST_CASE("Serve") {
   boost::beast::http::read(stream, buffer, res);
   boost::beast::error_code ec;
   stream.socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+  stream.socket().close();
+  stream.close();
 
   if (ec && ec != boost::beast::errc::not_connected) throw boost::beast::system_error{ec};
 
   server_io_context_.stop();
 
-  while (!server_io_context_.stopped()) {
-    continue;
-  }
+  std::this_thread::sleep_for(std::chrono::seconds(1));
 
   runner.join();
 }
