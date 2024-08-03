@@ -3,6 +3,7 @@
 #include <copper/version.h>
 #include <doctest/doctest.h>
 
+#include <boost/thread.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/ip/address.hpp>
 #include <boost/smart_ptr/make_shared_object.hpp>
@@ -25,7 +26,7 @@ TEST_CASE("Serve") {
                                state_)
       ->run();
 
-  std::thread runner([&server_io_context_] { server_io_context_.run(); });
+  boost::thread runner([&server_io_context_] { server_io_context_.run(); });
 
   runner.detach();
 
@@ -54,4 +55,8 @@ TEST_CASE("Serve") {
   if (ec && ec != boost::beast::errc::not_connected) throw boost::beast::system_error{ec};
 
   server_io_context_.stop();
+
+  while (!server_io_context_.stopped()) { continue; }
+
+  runner.join();
 }
