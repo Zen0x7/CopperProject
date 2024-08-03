@@ -2,8 +2,8 @@
 
 #include "copper/failure.h"
 
-copper::websocket_session::websocket_session(boost::asio::ip::tcp::socket&& socket)
-    : websocket_stream_(std::move(socket)) {}
+copper::websocket_session::websocket_session(boost::asio::ip::tcp::socket&& socket, boost::shared_ptr<state> const & state)
+    : websocket_stream_(std::move(socket)), state_(state) {}
 
 copper::websocket_session::~websocket_session() {
   // should leave

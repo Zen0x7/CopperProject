@@ -7,5 +7,8 @@
 TEST_CASE("State") {
   using namespace copper;
 
-  auto state_ = std::make_shared<state>();
+  auto first_state_ = std::make_shared<state>();
+  auto second_state_ = std::make_shared<state>();
+
+  CHECK_NE(first_state_->get_id(), second_state_->get_id());
 }

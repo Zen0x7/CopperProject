@@ -127,8 +127,8 @@ template <class Body, class Allocator> boost::beast::http::message_generator han
   return res;
 }
 
-copper::http_session::http_session(boost::asio::ip::tcp::socket&& socket)
-    : stream_(std::move(socket)) {}
+copper::http_session::http_session(boost::asio::ip::tcp::socket&& socket, boost::shared_ptr<state> const & state)
+    : stream_(std::move(socket)), state_(state) {}
 
 void copper::http_session::run() { do_read(); }
 
@@ -153,7 +153,7 @@ void copper::http_session::on_read(boost::beast::error_code error, std::size_t) 
   if (error) return failure::make(error, "read");
 
   if (boost::beast::websocket::is_upgrade(parser_->get())) {
-    boost::make_shared<websocket_session>(stream_.release_socket())->run(parser_->release());
+    boost::make_shared<websocket_session>(stream_.release_socket(), state_)->run(parser_->release());
     return;
   }
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <copper/state.h>
+
 #include <boost/beast/core.hpp>
 #include <boost/beast/websocket.hpp>
 #include <boost/smart_ptr.hpp>
@@ -9,13 +11,14 @@ namespace copper {
     boost::beast::flat_buffer buffer_;
     boost::beast::websocket::stream<boost::beast::tcp_stream> websocket_stream_;
     std::vector<boost::shared_ptr<std::string const>> queue_;
+    boost::shared_ptr<state> state_;
 
     void on_accept(boost::beast::error_code error);
     void on_read(boost::beast::error_code error, std::size_t bytes);
     void on_write(boost::beast::error_code error, std::size_t bytes);
 
   public:
-    websocket_session(boost::asio::ip::tcp::socket&& socket);
+    websocket_session(boost::asio::ip::tcp::socket&& socket, boost::shared_ptr<state> const & state);
 
     ~websocket_session();
 

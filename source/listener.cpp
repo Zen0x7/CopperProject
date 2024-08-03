@@ -1,8 +1,9 @@
 #include <copper/listener.h>
 
 copper::listener::listener(boost::asio::io_context& io_context,
-                           boost::asio::ip::tcp::endpoint endpoint)
-    : io_context_(io_context), acceptor_(io_context) {
+                           boost::asio::ip::tcp::endpoint endpoint,
+                           boost::shared_ptr<state> const & state)
+    : io_context_(io_context), acceptor_(io_context), state_(state) {
   boost::beast::error_code error;
 
   acceptor_.open(endpoint.protocol(), error);
@@ -38,7 +39,7 @@ void copper::listener::on_accept(boost::beast::error_code error,
                                  boost::asio::ip::tcp::socket socket) {
   if (error) return failure::make(error, "accept");
 
-  boost::make_shared<http_session>(std::move(socket))->run();
+  boost::make_shared<http_session>(std::move(socket), state_)->run();
 
   acceptor_.async_accept(make_strand(io_context_), boost::beast::bind_front_handler(
                                                        &listener::on_accept, shared_from_this()));
