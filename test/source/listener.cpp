@@ -53,6 +53,5 @@ TEST_CASE("Serve") {
 
   if (ec && ec != boost::beast::errc::not_connected) throw boost::beast::system_error{ec};
 
-  server_io_context_.restart();
   server_io_context_.stop();
 }

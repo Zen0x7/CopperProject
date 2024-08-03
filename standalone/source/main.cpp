@@ -54,6 +54,9 @@ auto main(int argc, char** argv) -> int {
       io_context_, boost::asio::ip::tcp::endpoint{service_address_, service_port_}, state_)
       ->run();
 
+  boost::asio::signal_set signals(io_context_, SIGINT, SIGTERM);
+  signals.async_wait([&io_context_](boost::system::error_code const&, int) { io_context_.stop(); });
+
   std::vector<std::thread> threads_;
   threads_.reserve(threads_number_ - 1);
   for (auto i = threads_number_ - 1; i > 0; --i)
