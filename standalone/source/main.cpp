@@ -35,12 +35,12 @@ auto main(int argc, char** argv) -> int {
 
   if (result["help"].as<bool>()) {
     std::cout << options.help() << std::endl;
-    return 0;
+    return EXIT_SUCCESS;
   }
 
   if (result["version"].as<bool>()) {
     std::cout << "Copper, version " << COPPER_VERSION << std::endl;
-    return 0;
+    return EXIT_SUCCESS;
   }
 
   auto service_address_ = boost::asio::ip::make_address(service_host_);
