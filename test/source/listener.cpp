@@ -3,10 +3,10 @@
 #include <copper/version.h>
 #include <doctest/doctest.h>
 
-#include <boost/thread.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/ip/address.hpp>
 #include <boost/smart_ptr/make_shared_object.hpp>
+#include <boost/thread.hpp>
 
 TEST_CASE("Serve") {
   using namespace copper;
@@ -56,7 +56,9 @@ TEST_CASE("Serve") {
 
   server_io_context_.stop();
 
-  while (!server_io_context_.stopped()) { continue; }
+  while (!server_io_context_.stopped()) {
+    continue;
+  }
 
   runner.join();
 }
