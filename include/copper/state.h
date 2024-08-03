@@ -1,7 +1,7 @@
 #pragma once
 
-#include <boost/uuid/uuid_generators.hpp>
 #include <boost/smart_ptr.hpp>
+#include <boost/uuid/uuid_generators.hpp>
 
 namespace copper {
   class state : public boost::enable_shared_from_this<state> {

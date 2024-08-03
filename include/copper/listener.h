@@ -21,7 +21,8 @@ namespace copper {
     void on_accept(boost::beast::error_code error, boost::asio::ip::tcp::socket socket);
 
   public:
-    listener(boost::asio::io_context& io_context, boost::asio::ip::tcp::endpoint endpoint, boost::shared_ptr<state> const & state);
+    listener(boost::asio::io_context& io_context, boost::asio::ip::tcp::endpoint endpoint,
+             boost::shared_ptr<state> const& state);
 
     void run();
   };

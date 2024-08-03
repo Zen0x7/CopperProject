@@ -18,7 +18,7 @@ namespace copper {
     void on_write(boost::beast::error_code error, std::size_t bytes);
 
   public:
-    websocket_session(boost::asio::ip::tcp::socket&& socket, boost::shared_ptr<state> const & state);
+    websocket_session(boost::asio::ip::tcp::socket&& socket, boost::shared_ptr<state> const& state);
 
     ~websocket_session();
 

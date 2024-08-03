@@ -2,7 +2,7 @@
 
 copper::listener::listener(boost::asio::io_context& io_context,
                            boost::asio::ip::tcp::endpoint endpoint,
-                           boost::shared_ptr<state> const & state)
+                           boost::shared_ptr<state> const& state)
     : io_context_(io_context), acceptor_(io_context), state_(state) {
   boost::beast::error_code error;
 

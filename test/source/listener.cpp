@@ -22,7 +22,8 @@ TEST_CASE("Listener") {
 
   auto state_ = boost::make_shared<state>();
 
-  boost::make_shared<listener>(io_context_, boost::asio::ip::tcp::endpoint{address_, port_}, state_)->run();
+  boost::make_shared<listener>(io_context_, boost::asio::ip::tcp::endpoint{address_, port_}, state_)
+      ->run();
 
   // std::vector<std::thread> v;
   // v.reserve(threads_ - 1);
