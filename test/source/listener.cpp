@@ -9,10 +9,10 @@
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/version.hpp>
-#include <boost/smart_ptr/make_shared_object.hpp>
-#include <boost/thread.hpp>
 #include <boost/chrono.hpp>
 #include <boost/chrono/chrono.hpp>
+#include <boost/smart_ptr/make_shared_object.hpp>
+#include <boost/thread.hpp>
 #include <cstdlib>
 #include <functional>
 #include <iostream>
@@ -104,7 +104,8 @@ TEST_CASE("Serve") {
 
   auto state_ = boost::make_shared<state>();
 
-  boost::make_shared<listener>(server_io_context_, boost::asio::ip::tcp::endpoint{address_, port_}, state_)
+  boost::make_shared<listener>(server_io_context_, boost::asio::ip::tcp::endpoint{address_, port_},
+                               state_)
       ->run();
 
   boost::make_shared<http_client>(client_io_context_)->run(host_, "7500", "/", 11);
