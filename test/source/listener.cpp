@@ -114,7 +114,7 @@ TEST_CASE("Serve") {
       ->run(host_, "7500", "/", 11, boost::beast::http::verb::get, true);
 
   boost::make_shared<http_client>(client_io_context_)
-    ->run(host_, "7500", "/", 11, boost::beast::http::verb::get, false);
+      ->run(host_, "7500", "/", 11, boost::beast::http::verb::get, false);
 
   boost::thread server_runner([&server_io_context_] { server_io_context_.run(); });
   boost::thread client_runner([&client_io_context_] { client_io_context_.run(); });
