@@ -91,7 +91,11 @@ public:
 TEST_CASE("Serve") {
   using namespace copper;
 
+#ifdef BOOST_MSVC
+  auto const host_ = "localhost";
+#else
   auto const host_ = "0.0.0.0";
+#endif
   auto address_ = boost::asio::ip::make_address(host_);
   unsigned short port_ = 7500;
 
@@ -102,7 +106,7 @@ TEST_CASE("Serve") {
   boost::make_shared<listener>(io_context_, boost::asio::ip::tcp::endpoint{address_, port_}, state_)
       ->run();
 
-  boost::make_shared<http_client>(io_context_)->run("0.0.0.0", "7500", "/", 11);
+  boost::make_shared<http_client>(io_context_)->run(host_, "7500", "/", 11);
 
   boost::thread runner([&io_context_] { io_context_.run(); });
 
