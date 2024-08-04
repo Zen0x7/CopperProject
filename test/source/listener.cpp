@@ -11,6 +11,8 @@
 #include <boost/beast/version.hpp>
 #include <boost/smart_ptr/make_shared_object.hpp>
 #include <boost/thread.hpp>
+#include <boost/chrono.hpp>
+#include <boost/chrono/chrono.hpp>
 #include <cstdlib>
 #include <functional>
 #include <iostream>
@@ -80,8 +82,6 @@ public:
 
     if (ec) return fail(ec, "read");
 
-    std::cout << res_ << std::endl;
-
     stream_.socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
 
     if (ec && ec != boost::beast::errc::not_connected) return fail(ec, "shutdown");
@@ -99,20 +99,32 @@ TEST_CASE("Serve") {
   auto address_ = boost::asio::ip::make_address(host_);
   unsigned short port_ = 7500;
 
-  boost::asio::io_context io_context_;
+  boost::asio::io_context server_io_context_;
+  boost::asio::io_context client_io_context_;
 
   auto state_ = boost::make_shared<state>();
 
-  boost::make_shared<listener>(io_context_, boost::asio::ip::tcp::endpoint{address_, port_}, state_)
+  boost::make_shared<listener>(server_io_context_, boost::asio::ip::tcp::endpoint{address_, port_}, state_)
       ->run();
 
-  boost::make_shared<http_client>(io_context_)->run(host_, "7500", "/", 11);
+  boost::make_shared<http_client>(client_io_context_)->run(host_, "7500", "/", 11);
 
-  boost::thread runner([&io_context_] { io_context_.run(); });
+  boost::thread server_runner([&server_io_context_] { server_io_context_.run(); });
+  boost::thread client_runner([&client_io_context_] { client_io_context_.run(); });
 
-  runner.detach();
+  server_runner.detach();
 
-  io_context_.stop();
+  std::this_thread::sleep_for(std::chrono::seconds(1));
 
-  runner.join();
+  client_runner.detach();
+
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+
+  server_io_context_.stop();
+  client_io_context_.stop();
+
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+
+  server_runner.join();
+  client_runner.join();
 }
