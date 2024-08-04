@@ -92,7 +92,7 @@ TEST_CASE("Serve") {
   using namespace copper;
 
 #ifdef BOOST_MSVC
-  auto const host_ = "localhost";
+  auto const host_ = "127.0.0.1";
 #else
   auto const host_ = "0.0.0.0";
 #endif
