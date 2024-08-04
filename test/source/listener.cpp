@@ -22,7 +22,7 @@ void fail(boost::beast::error_code ec, char const* what) {
   std::cerr << what << ": " << ec.message() << "\n";
 }
 
-class http_client : public std::enable_shared_from_this<http_client> {
+class http_client : public boost::enable_shared_from_this<http_client> {
   boost::asio::ip::tcp::resolver resolver_;
   boost::beast::tcp_stream stream_;
   boost::beast::flat_buffer buffer_;  // (Must persist between reads)
@@ -102,7 +102,7 @@ TEST_CASE("Serve") {
   boost::make_shared<listener>(io_context_, boost::asio::ip::tcp::endpoint{address_, port_}, state_)
       ->run();
 
-  std::make_shared<http_client>(io_context_)->run("0.0.0.0", "7500", "/", 11);
+  boost::make_shared<http_client>(io_context_)->run("0.0.0.0", "7500", "/", 11);
 
   boost::thread runner([&io_context_] { io_context_.run(); });
 
