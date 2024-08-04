@@ -35,12 +35,13 @@ public:
   explicit http_client(boost::asio::io_context& ioc)
       : resolver_(boost::asio::make_strand(ioc)), stream_(boost::asio::make_strand(ioc)) {}
 
-  void run(char const* host, char const* port, char const* target, int version) {
+  void run(char const* host, char const* port, char const* target, int version,
+           boost::beast::http::verb verb) {
     req_.version(version);
-    req_.method(boost::beast::http::verb::get);
+    req_.method(verb);
     req_.target(target);
     req_.set(boost::beast::http::field::host, host);
-    req_.set(boost::beast::http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+    req_.set(boost::beast::http::field::user_agent, "Copper 1.0");
 
     resolver_.async_resolve(
         host, port, boost::beast::bind_front_handler(&http_client::on_resolve, shared_from_this()));
@@ -108,7 +109,8 @@ TEST_CASE("Serve") {
                                state_)
       ->run();
 
-  boost::make_shared<http_client>(client_io_context_)->run(host_, "7500", "/", 11);
+  boost::make_shared<http_client>(client_io_context_)
+      ->run(host_, "7500", "/", 11, boost::beast::http::verb::get);
 
   boost::thread server_runner([&server_io_context_] { server_io_context_.run(); });
   boost::thread client_runner([&client_io_context_] { client_io_context_.run(); });
