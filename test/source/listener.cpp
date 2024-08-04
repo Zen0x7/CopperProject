@@ -91,28 +91,24 @@ public:
 TEST_CASE("Serve") {
   using namespace copper;
 
-  auto first_state_ = std::make_shared<state>();
-  auto second_state_ = std::make_shared<state>();
-
   auto const host_ = "0.0.0.0";
   auto address_ = boost::asio::ip::make_address(host_);
   unsigned short port_ = 7500;
 
-  boost::asio::io_context server_io_context_;
+  boost::asio::io_context io_context_;
 
   auto state_ = boost::make_shared<state>();
 
-  boost::make_shared<listener>(server_io_context_, boost::asio::ip::tcp::endpoint{address_, port_},
-                               state_)
+  boost::make_shared<listener>(io_context_, boost::asio::ip::tcp::endpoint{address_, port_}, state_)
       ->run();
 
-  boost::thread runner([&server_io_context_] { server_io_context_.run(); });
+  boost::thread runner([&io_context_] { io_context_.run(); });
 
   runner.detach();
 
-  std::make_shared<http_client>(server_io_context_)->run("0.0.0.0", "7500", "/", 11);
+  std::make_shared<http_client>(io_context_)->run("0.0.0.0", "7500", "/", 11);
 
-  server_io_context_.stop();
+  io_context_.stop();
 
   runner.join();
 }
