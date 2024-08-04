@@ -8,31 +8,27 @@ copper::listener::listener(boost::asio::io_context& io_context,
 
   acceptor_.open(endpoint.protocol(), error);
 
-  if (error) {
-    failure::make(error, "open");
-    return;
-  }
+  // clang-format off
+  if (error) { failure::make(error, "open"); return; }
+  // clang-format on
 
   acceptor_.set_option(boost::asio::socket_base::reuse_address(true), error);
 
-  if (error) {
-    failure::make(error, "set_option::reuse_address");
-    return;
-  }
+  // clang-format off
+  if (error) { failure::make(error, "set_option::reuse_address"); return; }
+  // clang-format on
 
   acceptor_.bind(endpoint, error);
 
-  if (error) {
-    failure::make(error, "bind");
-    return;
-  }
+  // clang-format off
+  if (error) { failure::make(error, "bind"); return; }
+  // clang-format on
 
   acceptor_.listen(boost::asio::socket_base::max_listen_connections, error);
 
-  if (error) {
-    failure::make(error, "listen");
-    return;
-  }
+  // clang-format off
+  if (error) { failure::make(error, "listen"); return; }
+  // clang-format on
 }
 
 void copper::listener::on_accept(boost::beast::error_code error,

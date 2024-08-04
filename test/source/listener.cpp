@@ -90,6 +90,93 @@ public:
   }
 };
 
+class websocket_client : public boost::enable_shared_from_this<websocket_client> {
+  boost::asio::ip::tcp::resolver resolver_;
+  boost::beast::websocket::stream<boost::beast::tcp_stream> ws_;
+  boost::beast::flat_buffer buffer_;
+  std::string host_;
+  std::string text_;
+
+public:
+  explicit websocket_client(boost::asio::io_context& ioc)
+      : resolver_(boost::asio::make_strand(ioc)), ws_(boost::asio::make_strand(ioc)) {}
+
+  void run(char const* host, char const* port, char const* text) {
+    host_ = host;
+    text_ = text;
+
+    resolver_.async_resolve(
+        host, port,
+        boost::beast::bind_front_handler(&websocket_client::on_resolve, shared_from_this()));
+  }
+
+  void on_resolve(boost::beast::error_code ec,
+                  boost::asio::ip::tcp::resolver::results_type results) {
+    if (ec) return fail(ec, "resolve");
+
+    boost::beast::get_lowest_layer(ws_).expires_after(std::chrono::seconds(30));
+
+    boost::beast::get_lowest_layer(ws_).async_connect(
+        results,
+        boost::beast::bind_front_handler(&websocket_client::on_connect, shared_from_this()));
+  }
+
+  void on_connect(boost::beast::error_code ec,
+                  boost::asio::ip::tcp::resolver::results_type::endpoint_type ep) {
+    if (ec) return fail(ec, "connect");
+
+    boost::beast::get_lowest_layer(ws_).expires_never();
+
+    ws_.set_option(
+        boost::beast::websocket::stream_base::timeout::suggested(boost::beast::role_type::client));
+
+    ws_.set_option(boost::beast::websocket::stream_base::decorator(
+        [](boost::beast::websocket::request_type& req) {
+          req.set(boost::beast::http::field::user_agent,
+                  std::string(BOOST_BEAST_VERSION_STRING) + " websocket-client-async");
+        }));
+
+    host_ += ':' + std::to_string(ep.port());
+
+    ws_.async_handshake(
+        host_, "/",
+        boost::beast::bind_front_handler(&websocket_client::on_handshake, shared_from_this()));
+  }
+
+  void on_handshake(boost::beast::error_code ec) {
+    if (ec) return fail(ec, "handshake");
+
+    ws_.async_write(
+        boost::asio::buffer(text_),
+        boost::beast::bind_front_handler(&websocket_client::on_write, shared_from_this()));
+  }
+
+  void on_write(boost::beast::error_code ec, std::size_t bytes_transferred) {
+    boost::ignore_unused(bytes_transferred);
+
+    if (ec) return fail(ec, "write");
+
+    ws_.async_read(
+        buffer_, boost::beast::bind_front_handler(&websocket_client::on_read, shared_from_this()));
+  }
+
+  void on_read(boost::beast::error_code ec, std::size_t bytes_transferred) {
+    boost::ignore_unused(bytes_transferred);
+
+    if (ec) return fail(ec, "read");
+
+    ws_.async_close(
+        boost::beast::websocket::close_code::normal,
+        boost::beast::bind_front_handler(&websocket_client::on_close, shared_from_this()));
+  }
+
+  void on_close(boost::beast::error_code ec) {
+    if (ec) return fail(ec, "close");
+
+    std::cout << boost::beast::make_printable(buffer_.data()) << std::endl;
+  }
+};
+
 TEST_CASE("Serve") {
   using namespace copper;
 
@@ -115,6 +202,8 @@ TEST_CASE("Serve") {
 
   boost::make_shared<http_client>(client_io_context_)
       ->run(host_, "7500", "/", 11, boost::beast::http::verb::get, false);
+
+  boost::make_shared<websocket_client>(client_io_context_)->run(host_, "7500", "EHLO");
 
   boost::thread server_runner([&server_io_context_] { server_io_context_.run(); });
   boost::thread client_runner([&client_io_context_] { client_io_context_.run(); });
