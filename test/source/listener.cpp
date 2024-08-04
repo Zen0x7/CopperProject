@@ -102,11 +102,11 @@ TEST_CASE("Serve") {
   boost::make_shared<listener>(io_context_, boost::asio::ip::tcp::endpoint{address_, port_}, state_)
       ->run();
 
+  std::make_shared<http_client>(io_context_)->run("0.0.0.0", "7500", "/", 11);
+
   boost::thread runner([&io_context_] { io_context_.run(); });
 
   runner.detach();
-
-  std::make_shared<http_client>(io_context_)->run("0.0.0.0", "7500", "/", 11);
 
   io_context_.stop();
 
