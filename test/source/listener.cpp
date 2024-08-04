@@ -15,7 +15,7 @@ TEST_CASE("Serve") {
   auto first_state_ = std::make_shared<state>();
   auto second_state_ = std::make_shared<state>();
 
-  auto const host_ = "0.0.0.0";
+  auto const host_ = "localhost";
   auto address_ = boost::asio::ip::make_address(host_);
   unsigned short port_ = 7500;
 
