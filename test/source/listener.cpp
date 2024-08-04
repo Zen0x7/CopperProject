@@ -36,9 +36,10 @@ public:
       : resolver_(boost::asio::make_strand(ioc)), stream_(boost::asio::make_strand(ioc)) {}
 
   void run(char const* host, char const* port, char const* target, int version,
-           boost::beast::http::verb verb) {
+           boost::beast::http::verb verb, bool keep_alived) {
     req_.version(version);
     req_.method(verb);
+    req_.keep_alive(keep_alived);
     req_.target(target);
     req_.set(boost::beast::http::field::host, host);
     req_.set(boost::beast::http::field::user_agent, "Copper 1.0");
@@ -110,7 +111,10 @@ TEST_CASE("Serve") {
       ->run();
 
   boost::make_shared<http_client>(client_io_context_)
-      ->run(host_, "7500", "/", 11, boost::beast::http::verb::get);
+      ->run(host_, "7500", "/", 11, boost::beast::http::verb::get, true);
+
+  boost::make_shared<http_client>(client_io_context_)
+    ->run(host_, "7500", "/", 11, boost::beast::http::verb::get, false);
 
   boost::thread server_runner([&server_io_context_] { server_io_context_.run(); });
   boost::thread client_runner([&client_io_context_] { client_io_context_.run(); });
