@@ -8,6 +8,7 @@
 
 namespace copper {
   class websocket_session : public boost::enable_shared_from_this<websocket_session> {
+    boost::uuids::uuid id_;
     boost::beast::flat_buffer buffer_;
     boost::beast::websocket::stream<boost::beast::tcp_stream> websocket_stream_;
     std::vector<boost::shared_ptr<std::string const>> queue_;
