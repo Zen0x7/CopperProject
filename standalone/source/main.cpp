@@ -11,6 +11,7 @@
 #include <cxxopts.hpp>
 #include <iostream>
 #include <string>
+#include <termcolor/termcolor.hpp>
 
 auto main(int argc, char** argv) -> int {
   using namespace copper;
@@ -61,6 +62,10 @@ auto main(int argc, char** argv) -> int {
   threads_.reserve(threads_number_ - 1);
   for (auto i = threads_number_ - 1; i > 0; --i)
     threads_.emplace_back([&io_context_] { io_context_.run(); });
+
+  std::cout << termcolor::green << termcolor::bold << "Service running on " << service_host_ << ":"
+            << service_port_ << " ... " << termcolor::reset << std::endl;
+
   io_context_.run();
 
   for (auto& thread : threads_) thread.join();
