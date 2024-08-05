@@ -20,6 +20,6 @@ namespace copper {
 
     void join(websocket_session* session);
     void leave(websocket_session* session);
-    void send(std::string message);
+    void send(boost::uuids::uuid id, std::string message);
   };
 }  // namespace copper

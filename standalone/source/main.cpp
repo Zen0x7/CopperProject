@@ -1,5 +1,6 @@
 #include <copper/copper.h>
 #include <copper/listener.h>
+#include <copper/logger.h>
 #include <copper/state.h>
 #include <copper/state_container.h>
 #include <copper/version.h>
@@ -63,8 +64,9 @@ auto main(int argc, char** argv) -> int {
   for (auto i = threads_number_ - 1; i > 0; --i)
     threads_.emplace_back([&io_context_] { io_context_.run(); });
 
-  std::cout << termcolor::green << termcolor::bold << "Service running on " << service_host_ << ":"
-            << service_port_ << " ... " << termcolor::reset << std::endl;
+  const std::string running_message
+      = "Service running on " + service_host_ + ":" + std::to_string(service_port_) + " ...";
+  logger::success(running_message);
 
   io_context_.run();
 
