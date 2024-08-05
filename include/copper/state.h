@@ -2,6 +2,7 @@
 
 #include <boost/smart_ptr.hpp>
 #include <boost/uuid/uuid_generators.hpp>
+#include <mutex>
 #include <unordered_set>
 
 namespace copper {
