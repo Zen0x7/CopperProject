@@ -26,6 +26,14 @@ void copper::websocket_session::on_accept(boost::beast::error_code error) {
   const std::string connected_event_serialized = serialize(connected_event_object);
   state_->send(id_, connected_event_serialized);
 
+  boost::json::object accepted_event_object
+      = {{"event", "accepted"}, {"payload", {{"id", to_string(id_)}}}};
+
+  const std::string accepted_event_serialized = serialize(connected_event_object);
+  const auto accepted_event_shared
+      = boost::make_shared<const std::string>(accepted_event_serialized);
+  this->send(accepted_event_shared);
+
   websocket_stream_.async_read(
       buffer_, boost::beast::bind_front_handler(&websocket_session::on_read, shared_from_this()));
 }
