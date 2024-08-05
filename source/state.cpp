@@ -1,5 +1,8 @@
+#include <copper/logger.h>
 #include <copper/state.h>
 #include <copper/websocket_session.h>
+
+#include <boost/uuid/uuid.hpp>
 
 using namespace copper;
 
@@ -14,7 +17,9 @@ void state::leave(websocket_session* session) {
   std::lock_guard lock(mutex_);
   sessions_.erase(session);
 }
-void state::send(std::string message) {
+void state::send(const boost::uuids::uuid id, std::string message) {
+  logger::on_broadcast(id, message);
+
   auto const ss = boost::make_shared<std::string const>(std::move(message));
 
   std::vector<boost::weak_ptr<websocket_session>> v;
