@@ -16,6 +16,8 @@ CPMAddPackage(
   OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO" "CXXOPTS_ENABLE_INSTALL YES"
 )
 
+CPMAddPackage(GITHUB_REPOSITORY ikalnytskyi/termcolor VERSION 2.1.0)
+
 CPMAddPackage(NAME Copper SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 
 # ---- Create standalone executable ----
@@ -32,4 +34,4 @@ add_executable(${PROJECT_NAME} ${sources})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "Copper")
 
-target_link_libraries(${PROJECT_NAME} Copper::Copper cxxopts ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} Copper::Copper cxxopts termcolor ${Boost_LIBRARIES})
