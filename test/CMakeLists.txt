@@ -27,7 +27,7 @@ endif()
 
 find_package(
   Boost 1.85.0
-  COMPONENTS json thread program_options random
+  COMPONENTS json thread program_options random coroutine
   REQUIRED
 )
 

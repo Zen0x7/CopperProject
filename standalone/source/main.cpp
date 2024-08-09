@@ -5,26 +5,22 @@
 #include <copper/state_container.h>
 #include <copper/version.h>
 
-#include <coroutine>
-
-
-#include <boost/redis/connection.hpp>
-#include <boost/redis/logger.hpp>
 #include <boost/asio/awaitable.hpp>
-#include <boost/asio/use_awaitable.hpp>
-#include <boost/asio/deferred.hpp>
 #include <boost/asio/co_spawn.hpp>
-#include <boost/asio/co_spawn.hpp>
-#include <boost/asio/use_awaitable.hpp>
-#include <boost/asio/io_context.hpp>
-#include <boost/asio/detached.hpp>
 #include <boost/asio/consign.hpp>
+#include <boost/asio/deferred.hpp>
+#include <boost/asio/detached.hpp>
+#include <boost/asio/io_context.hpp>
 #include <boost/asio/redirect_error.hpp>
 #include <boost/asio/signal_set.hpp>
+#include <boost/asio/use_awaitable.hpp>
+#include <boost/redis/connection.hpp>
+#include <boost/redis/logger.hpp>
 #include <boost/redis/src.hpp>
 #include <boost/smart_ptr/make_shared_object.hpp>
 #include <boost/stacktrace.hpp>
 #include <boost/thread.hpp>
+#include <coroutine>
 #include <cxxopts.hpp>
 #include <iostream>
 #include <string>
@@ -32,7 +28,8 @@
 
 using signal_set = boost::asio::deferred_t::as_default_on_t<boost::asio::signal_set>;
 
-auto deep_receiver(boost::shared_ptr<boost::redis::connection> conn) -> boost::asio::awaitable<void> {
+auto deep_receiver(boost::shared_ptr<boost::redis::connection> conn)
+    -> boost::asio::awaitable<void> {
   boost::redis::request req;
   req.push("SUBSCRIBE", "channel");
 
@@ -41,7 +38,6 @@ auto deep_receiver(boost::shared_ptr<boost::redis::connection> conn) -> boost::a
   conn->set_receive_response(resp);
 
   while (conn->will_reconnect()) {
-
     co_await conn->async_exec(req, boost::redis::ignore, boost::asio::deferred);
 
     for (boost::system::error_code ec;;) {
@@ -53,15 +49,10 @@ auto deep_receiver(boost::shared_ptr<boost::redis::connection> conn) -> boost::a
         co_await conn->async_receive(boost::asio::redirect_error(boost::asio::use_awaitable, ec));
       }
 
-      if (ec)
-        break;
+      if (ec) break;
 
-
-      std::cout
-         << resp.value().at(1).value
-         << " " << resp.value().at(2).value
-         << " " << resp.value().at(3).value
-         << std::endl;
+      std::cout << resp.value().at(1).value << " " << resp.value().at(2).value << " "
+                << resp.value().at(3).value << std::endl;
 
       boost::redis::consume_one(resp);
     }
@@ -78,9 +69,9 @@ auto co_receiver(boost::redis::config cfg) -> boost::asio::awaitable<void> {
 
   signal_set sig_set(ex, SIGINT, SIGTERM);
   co_await sig_set.async_wait();
+  std::cout << "Message" << std::endl;
   conn->cancel();
 }
-
 
 auto main(int argc, char** argv) -> int {
   using namespace copper;
@@ -126,14 +117,11 @@ auto main(int argc, char** argv) -> int {
   cfg.addr.host = "127.0.0.1";
   cfg.addr.port = "6379";
 
-  boost::asio::co_spawn(redis_io_context_, co_receiver(cfg), [] (std::exception_ptr p) {
-    if (p)
-      std::rethrow_exception(p);
+  boost::asio::co_spawn(redis_io_context_, co_receiver(cfg), [](std::exception_ptr p) {
+    if (p) std::rethrow_exception(p);
   });
 
-  boost::thread thread([&redis_io_context_]() {
-    redis_io_context_.run();
-  });
+  boost::thread thread([&redis_io_context_]() { redis_io_context_.run(); });
 
   thread.detach();
 
