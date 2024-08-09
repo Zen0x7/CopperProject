@@ -22,16 +22,21 @@ CPMAddPackage(NAME Copper SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 
 # ---- Create standalone executable ----
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 find_package(
   Boost 1.85.0
-  COMPONENTS json thread program_options random
+  COMPONENTS json thread program_options random coroutine
   REQUIRED
 )
+
+find_package(OpenSSL REQUIRED)
 
 file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 
 add_executable(${PROJECT_NAME} ${sources})
 
-set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "Copper")
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20 OUTPUT_NAME "Copper")
 
-target_link_libraries(${PROJECT_NAME} Copper::Copper cxxopts termcolor ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} Copper::Copper OpenSSL::SSL cxxopts termcolor ${Boost_LIBRARIES})

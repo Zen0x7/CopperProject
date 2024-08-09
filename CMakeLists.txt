@@ -51,7 +51,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 26)
 
 find_package(
   Boost 1.85.0
-  COMPONENTS json thread program_options random
+  COMPONENTS json thread program_options random coroutine
   REQUIRED
 )
 
