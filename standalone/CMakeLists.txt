@@ -39,4 +39,6 @@ add_executable(${PROJECT_NAME} ${sources})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20 OUTPUT_NAME "Copper")
 
-target_link_libraries(${PROJECT_NAME} Copper::Copper OpenSSL::SSL cxxopts termcolor ${Boost_LIBRARIES})
+target_link_libraries(
+  ${PROJECT_NAME} Copper::Copper OpenSSL::SSL cxxopts termcolor ${Boost_LIBRARIES}
+)
