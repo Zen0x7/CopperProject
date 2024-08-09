@@ -28,7 +28,7 @@
 
 using signal_set = boost::asio::deferred_t::as_default_on_t<boost::asio::signal_set>;
 
-auto deep_receiver(boost::shared_ptr<boost::redis::connection> conn)
+auto receiver(const boost::shared_ptr<boost::redis::connection> conn)
     -> boost::asio::awaitable<void> {
   boost::redis::request req;
   req.push("SUBSCRIBE", "channel");
@@ -62,14 +62,10 @@ auto deep_receiver(boost::shared_ptr<boost::redis::connection> conn)
 auto co_receiver(boost::redis::config cfg) -> boost::asio::awaitable<void> {
   auto ex = co_await boost::asio::this_coro::executor;
   auto conn = boost::make_shared<boost::redis::connection>(ex);
-
-  boost::asio::co_spawn(ex, deep_receiver(conn), boost::asio::detached);
-
-  conn->async_run(cfg, {}, boost::asio::consign(boost::asio::detached, conn));
-
+  co_spawn(ex, receiver(conn), boost::asio::detached);
+  conn->async_run(cfg, {}, consign(boost::asio::detached, conn));
   signal_set sig_set(ex, SIGINT, SIGTERM);
   co_await sig_set.async_wait();
-  std::cout << "Message" << std::endl;
   conn->cancel();
 }
 
@@ -117,13 +113,9 @@ auto main(int argc, char** argv) -> int {
   cfg.addr.host = "127.0.0.1";
   cfg.addr.port = "6379";
 
-  boost::asio::co_spawn(redis_io_context_, co_receiver(cfg), [](std::exception_ptr p) {
+  co_spawn(io_context_, co_receiver(cfg), [](std::exception_ptr p) {
     if (p) std::rethrow_exception(p);
   });
-
-  boost::thread thread([&redis_io_context_]() { redis_io_context_.run(); });
-
-  thread.detach();
 
   boost::make_shared<listener>(
       io_context_, boost::asio::ip::tcp::endpoint{service_address_, service_port_}, state_)
