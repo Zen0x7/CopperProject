@@ -52,7 +52,7 @@
           <span class="m-breadcrumb"><a href="namespacecopper.html">copper</a>::<wbr/></span>listener <span class="m-thin">class</span>
           <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="listener_8h.html">&lt;copper/listener.h&gt;</a></div>
         </h1>
-        <p><span></span></p>
+        <p>TCP listener.</p>
         <nav class="m-block m-default">
           <h3>Contents</h3>
           <ul>
@@ -68,12 +68,12 @@
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
-            <dt id="a31649b2602f392c22016ae6e72c6ec33">
-              <span class="m-doc-wrap-bumper"><a href="#a31649b2602f392c22016ae6e72c6ec33" class="m-doc-self">listener</a>(</span><span class="m-doc-wrap">boost::asio::io_context&amp; io_context,
+            <dt>
+              <span class="m-doc-wrap-bumper"><a href="#a31649b2602f392c22016ae6e72c6ec33" class="m-doc">listener</a>(</span><span class="m-doc-wrap">boost::asio::io_context&amp; io_context,
               boost::asio::ip::tcp::endpoint endpoint,
               boost::shared_ptr&lt;<a href="classcopper_1_1state.html" class="m-doc">state</a>&gt; const&amp; state)</span>
             </dt>
-            <dd><span></span></dd>
+            <dd>Creates a new instance.</dd>
           </dl>
         </section>
         <section id="pub-methods">
@@ -82,8 +82,38 @@
             <dt id="a9cc282d3b0ee726181b7f72af1ecdcb5">
               <span class="m-doc-wrap-bumper">void <a href="#a9cc282d3b0ee726181b7f72af1ecdcb5" class="m-doc-self">run</a>(</span><span class="m-doc-wrap">)</span>
             </dt>
-            <dd><span></span></dd>
+            <dd>Run.</dd>
           </dl>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="a31649b2602f392c22016ae6e72c6ec33"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper"> copper::<wbr />listener::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a31649b2602f392c22016ae6e72c6ec33" class="m-doc-self">listener</a>(</span><span class="m-doc-wrap">boost::asio::io_context&amp; io_context,
+              boost::asio::ip::tcp::endpoint endpoint,
+              boost::shared_ptr&lt;<a href="classcopper_1_1state.html" class="m-doc">state</a>&gt; const&amp; state)</span></span>
+            </h3>
+            <p>Creates a new instance.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">io_context</td>
+                  <td>Asio IO Context</td>
+                </tr>
+                <tr>
+                  <td>endpoint</td>
+                  <td>Asio endpoint</td>
+                </tr>
+                <tr>
+                  <td>state</td>
+                  <td>Shared state</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
         </section>
       </div>
     </div>
@@ -129,7 +159,7 @@
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>Copper. Created with <a href="https://doxygen.org/">Doxygen</a> 1.11.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>Copper. Created with <a href="https://doxygen.org/">Doxygen</a> 1.12.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>

@@ -52,7 +52,7 @@
           <span class="m-breadcrumb"><a href="namespacecopper.html">copper</a>::<wbr/></span>websocket_session <span class="m-thin">class</span>
           <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="websocket__session_8h.html">&lt;copper/websocket_session.h&gt;</a></div>
         </h1>
-        <p><span></span></p>
+        <p>WebSocket session.</p>
         <nav class="m-block m-default">
           <h3>Contents</h3>
           <ul>
@@ -68,11 +68,11 @@
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
-            <dt id="a5f9d6dfe568cf3f04b1545de48b72268">
-              <span class="m-doc-wrap-bumper"><a href="#a5f9d6dfe568cf3f04b1545de48b72268" class="m-doc-self">websocket_session</a>(</span><span class="m-doc-wrap">boost::asio::ip::tcp::socket&amp;&amp; socket,
+            <dt>
+              <span class="m-doc-wrap-bumper"><a href="#a5f9d6dfe568cf3f04b1545de48b72268" class="m-doc">websocket_session</a>(</span><span class="m-doc-wrap">boost::asio::ip::tcp::socket&amp;&amp; socket,
               boost::shared_ptr&lt;<a href="classcopper_1_1state.html" class="m-doc">state</a>&gt; const&amp; state)</span>
             </dt>
-            <dd><span></span></dd>
+            <dd>Creates a new instance.</dd>
             <dt id="ada02887347e3daf43ee61a015173a3a1">
               <span class="m-doc-wrap-bumper"><a href="#ada02887347e3daf43ee61a015173a3a1" class="m-doc-self">~websocket_session</a>(</span><span class="m-doc-wrap">)</span>
             </dt>
@@ -82,16 +82,78 @@
         <section id="pub-methods">
           <h2><a href="#pub-methods">Public functions</a></h2>
           <dl class="m-doc">
-            <dt id="a27ae2f0c7885cdabcfe4d18b5cdbd770">
+            <dt>
               <div class="m-doc-template">template&lt;class Body, class Allocator&gt;</div>
-              <span class="m-doc-wrap-bumper">void <a href="#a27ae2f0c7885cdabcfe4d18b5cdbd770" class="m-doc-self">run</a>(</span><span class="m-doc-wrap">boost::beast::http::request&lt;Body, boost::beast::http::basic_fields&lt;Allocator&gt;&gt; request)</span>
+              <span class="m-doc-wrap-bumper">void <a href="#a27ae2f0c7885cdabcfe4d18b5cdbd770" class="m-doc">run</a>(</span><span class="m-doc-wrap">boost::beast::http::request&lt;Body, boost::beast::http::basic_fields&lt;Allocator&gt;&gt; request)</span>
             </dt>
-            <dd><span></span></dd>
-            <dt id="a9168a5a712a480d16d58b41cae8cdafb">
-              <span class="m-doc-wrap-bumper">void <a href="#a9168a5a712a480d16d58b41cae8cdafb" class="m-doc-self">send</a>(</span><span class="m-doc-wrap">boost::shared_ptr&lt;std::string const&gt; const&amp; data)</span>
+            <dd>Run.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a9168a5a712a480d16d58b41cae8cdafb" class="m-doc">send</a>(</span><span class="m-doc-wrap">boost::shared_ptr&lt;std::string const&gt; const&amp; data)</span>
             </dt>
-            <dd><span></span></dd>
+            <dd>Schedule a write operation.</dd>
           </dl>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="a5f9d6dfe568cf3f04b1545de48b72268"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper"> copper::<wbr />websocket_session::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a5f9d6dfe568cf3f04b1545de48b72268" class="m-doc-self">websocket_session</a>(</span><span class="m-doc-wrap">boost::asio::ip::tcp::socket&amp;&amp; socket,
+              boost::shared_ptr&lt;<a href="classcopper_1_1state.html" class="m-doc">state</a>&gt; const&amp; state)</span></span>
+            </h3>
+            <p>Creates a new instance.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">socket</td>
+                  <td>Asio socket</td>
+                </tr>
+                <tr>
+                  <td>state</td>
+                  <td>Shared state</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a27ae2f0c7885cdabcfe4d18b5cdbd770"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;class Body, class Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">void copper::<wbr />websocket_session::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a27ae2f0c7885cdabcfe4d18b5cdbd770" class="m-doc-self">run</a>(</span><span class="m-doc-wrap">boost::beast::http::request&lt;Body, boost::beast::http::basic_fields&lt;Allocator&gt;&gt; request)</span></span>
+            </h3>
+            <p>Run.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">request</td>
+                  <td>Upgrade request</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a9168a5a712a480d16d58b41cae8cdafb"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void copper::<wbr />websocket_session::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9168a5a712a480d16d58b41cae8cdafb" class="m-doc-self">send</a>(</span><span class="m-doc-wrap">boost::shared_ptr&lt;std::string const&gt; const&amp; data)</span></span>
+            </h3>
+            <p>Schedule a write operation.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">data</td>
+                  <td>Payload</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
         </section>
       </div>
     </div>
@@ -137,7 +199,7 @@
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>Copper. Created with <a href="https://doxygen.org/">Doxygen</a> 1.11.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>Copper. Created with <a href="https://doxygen.org/">Doxygen</a> 1.12.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>

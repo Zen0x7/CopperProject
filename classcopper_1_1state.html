@@ -52,7 +52,7 @@
           <span class="m-breadcrumb"><a href="namespacecopper.html">copper</a>::<wbr/></span>state <span class="m-thin">class</span>
           <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="state_8h.html">&lt;copper/state.h&gt;</a></div>
         </h1>
-        <p><span></span></p>
+        <p>Program shared state.</p>
         <nav class="m-block m-default">
           <h3>Contents</h3>
           <ul>
@@ -71,7 +71,7 @@
             <dt id="ade9065b3ae51853130f2e31e880e6202">
               <span class="m-doc-wrap-bumper"><a href="#ade9065b3ae51853130f2e31e880e6202" class="m-doc-self">state</a>(</span><span class="m-doc-wrap">)</span>
             </dt>
-            <dd><span></span></dd>
+            <dd>Creates a new instance.</dd>
           </dl>
         </section>
         <section id="pub-methods">
@@ -80,21 +80,101 @@
             <dt id="aeba8887843d680d9060aa25e56ff57cd">
               <span class="m-doc-wrap-bumper">auto <a href="#aeba8887843d680d9060aa25e56ff57cd" class="m-doc-self">get_id</a>(</span><span class="m-doc-wrap">) const -&gt; boost::uuids::uuid</span>
             </dt>
-            <dd><span></span></dd>
-            <dt id="a2baf3f55d07b9acdb8da6ddbf794cdfd">
-              <span class="m-doc-wrap-bumper">void <a href="#a2baf3f55d07b9acdb8da6ddbf794cdfd" class="m-doc-self">join</a>(</span><span class="m-doc-wrap"><a href="classcopper_1_1websocket__session.html" class="m-doc">websocket_<wbr />session</a>* session)</span>
+            <dd>Retrieves the instance identifier.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a2baf3f55d07b9acdb8da6ddbf794cdfd" class="m-doc">join</a>(</span><span class="m-doc-wrap"><a href="classcopper_1_1websocket__session.html" class="m-doc">websocket_<wbr />session</a>* session)</span>
             </dt>
-            <dd><span></span></dd>
-            <dt id="a85ccb8d297eda642e4535e9069c9b244">
-              <span class="m-doc-wrap-bumper">void <a href="#a85ccb8d297eda642e4535e9069c9b244" class="m-doc-self">leave</a>(</span><span class="m-doc-wrap"><a href="classcopper_1_1websocket__session.html" class="m-doc">websocket_<wbr />session</a>* session)</span>
+            <dd>Adds the fresh session into the session list.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a85ccb8d297eda642e4535e9069c9b244" class="m-doc">leave</a>(</span><span class="m-doc-wrap"><a href="classcopper_1_1websocket__session.html" class="m-doc">websocket_<wbr />session</a>* session)</span>
             </dt>
-            <dd><span></span></dd>
-            <dt id="a8307456c673b5cfc993138b4080fddb6">
-              <span class="m-doc-wrap-bumper">void <a href="#a8307456c673b5cfc993138b4080fddb6" class="m-doc-self">send</a>(</span><span class="m-doc-wrap">boost::uuids::uuid id,
-              std::string message)</span>
+            <dd>Removes the session from the session list.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a02bb19ca0e6ad3d7d741486cc630856d" class="m-doc">broadcast</a>(</span><span class="m-doc-wrap">boost::uuids::uuid id,
+              std::string data)</span>
             </dt>
-            <dd><span></span></dd>
+            <dd>Broadcast a session message.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a5cd231f5edf40c2673dc91ec0c9f45f7" class="m-doc">set_config</a>(</span><span class="m-doc-wrap">const <a href="structcopper_1_1state__config.html" class="m-doc">state_<wbr />config</a>&amp; config)</span>
+            </dt>
+            <dd>Set state configuration.</dd>
           </dl>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="a2baf3f55d07b9acdb8da6ddbf794cdfd"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void copper::<wbr />state::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a2baf3f55d07b9acdb8da6ddbf794cdfd" class="m-doc-self">join</a>(</span><span class="m-doc-wrap"><a href="classcopper_1_1websocket__session.html" class="m-doc">websocket_<wbr />session</a>* session)</span></span>
+            </h3>
+            <p>Adds the fresh session into the session list.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">session</td>
+                  <td>WebSocket session</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a85ccb8d297eda642e4535e9069c9b244"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void copper::<wbr />state::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a85ccb8d297eda642e4535e9069c9b244" class="m-doc-self">leave</a>(</span><span class="m-doc-wrap"><a href="classcopper_1_1websocket__session.html" class="m-doc">websocket_<wbr />session</a>* session)</span></span>
+            </h3>
+            <p>Removes the session from the session list.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">session</td>
+                  <td>WebSocket session</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a02bb19ca0e6ad3d7d741486cc630856d"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void copper::<wbr />state::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a02bb19ca0e6ad3d7d741486cc630856d" class="m-doc-self">broadcast</a>(</span><span class="m-doc-wrap">boost::uuids::uuid id,
+              std::string data)</span></span>
+            </h3>
+            <p>Broadcast a session message.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">id</td>
+                  <td>WebSocket identifier</td>
+                </tr>
+                <tr>
+                  <td>data</td>
+                  <td>Payload</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a5cd231f5edf40c2673dc91ec0c9f45f7"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void copper::<wbr />state::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a5cd231f5edf40c2673dc91ec0c9f45f7" class="m-doc-self">set_config</a>(</span><span class="m-doc-wrap">const <a href="structcopper_1_1state__config.html" class="m-doc">state_<wbr />config</a>&amp; config)</span></span>
+            </h3>
+            <p>Set state configuration.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">config</td>
+                  <td>State configuration</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
         </section>
       </div>
     </div>
@@ -140,7 +220,7 @@
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>Copper. Created with <a href="https://doxygen.org/">Doxygen</a> 1.11.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>Copper. Created with <a href="https://doxygen.org/">Doxygen</a> 1.12.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>
