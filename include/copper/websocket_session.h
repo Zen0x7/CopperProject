@@ -7,6 +7,9 @@
 #include <boost/smart_ptr.hpp>
 
 namespace copper {
+  /**
+   * @brief WebSocket session
+   */
   class websocket_session : public boost::enable_shared_from_this<websocket_session> {
     boost::uuids::uuid id_;
     boost::beast::flat_buffer buffer_;
@@ -14,21 +17,54 @@ namespace copper {
     std::vector<boost::shared_ptr<std::string const>> queue_;
     boost::shared_ptr<state> state_;
 
+    /**
+     * @brief Callback executed when websocket session has been upgraded
+     * @param error Error code
+     */
     void on_accept(boost::beast::error_code error);
+
+    /**
+     * @brief Reads the event
+     * @param error Error code
+     * @param bytes Buffer size
+     */
     void on_read(boost::beast::error_code error, std::size_t bytes);
+
+    /**
+     * @brief Writes the event
+     * @param error Error code
+     * @param bytes Buffer size
+     */
     void on_write(boost::beast::error_code error, std::size_t bytes);
 
   public:
+    /**
+     * @brief Creates a new instance
+     * @param socket Asio socket
+     * @param state Shared state
+     */
     websocket_session(boost::asio::ip::tcp::socket&& socket, boost::shared_ptr<state> const& state);
 
     ~websocket_session();
 
+    /**
+     * @brief Run
+     * @param request Upgrade request
+     */
     template <class Body, class Allocator> void run(
         boost::beast::http::request<Body, boost::beast::http::basic_fields<Allocator>> request);
 
+    /**
+     * @brief Schedule a write operation
+     * @param data Payload
+     */
     void send(boost::shared_ptr<std::string const> const& data);
 
   private:
+    /**
+     * @brief Writes an event
+     * @param data Payload
+     */
     void on_send(boost::shared_ptr<std::string const> const& data);
   };
 }  // namespace copper

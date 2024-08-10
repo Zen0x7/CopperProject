@@ -17,10 +17,11 @@ void state::leave(websocket_session* session) {
   std::lock_guard lock(mutex_);
   sessions_.erase(session);
 }
-void state::send(const boost::uuids::uuid id, std::string message) {
-  logger::on_broadcast(id, message);
 
-  auto const ss = boost::make_shared<std::string const>(std::move(message));
+void state::broadcast(const boost::uuids::uuid id, std::string data) {
+  logger::on_broadcast(id, data);
+
+  auto const ss = boost::make_shared<std::string const>(std::move(data));
 
   std::vector<boost::weak_ptr<websocket_session>> v;
   {
