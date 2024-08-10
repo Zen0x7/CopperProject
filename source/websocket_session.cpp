@@ -24,7 +24,7 @@ void copper::websocket_session::on_accept(boost::beast::error_code error) {
   boost::json::object connected_event_object
       = {{"event", "connected"}, {"payload", {{"id", to_string(id_)}}}};
   const std::string connected_event_serialized = serialize(connected_event_object);
-  state_->send(id_, connected_event_serialized);
+  state_->broadcast(id_, connected_event_serialized);
 
   boost::json::object accepted_event_object
       = {{"event", "accepted"}, {"payload", {{"id", to_string(id_)}}}};
