@@ -46,7 +46,7 @@ auto receiver(const boost::shared_ptr<boost::redis::connection> conn)
       if (ec == boost::redis::error::sync_receive_push_failed) {
         ec = {};
 
-        co_await conn->async_receive(boost::asio::redirect_error(boost::asio::use_awaitable, ec));
+        co_await conn->async_receive(redirect_error(boost::asio::use_awaitable, ec));
       }
 
       if (ec) break;
