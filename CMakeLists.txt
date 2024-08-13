@@ -59,7 +59,7 @@ find_package(
 target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
 
 # Link dependencies
-target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt termcolor ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt termcolor OpenSSL::SSL ${Boost_LIBRARIES})
 
 target_include_directories(
   ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
