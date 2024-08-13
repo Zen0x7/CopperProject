@@ -55,6 +55,8 @@ find_package(
   REQUIRED
 )
 
+find_package(OpenSSL REQUIRED)
+
 # being a cross-platform target, we enforce standards conformance on MSVC
 target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
 
