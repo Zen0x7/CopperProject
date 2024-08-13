@@ -2,11 +2,29 @@
 #include <copper/state.h>
 #include <copper/websocket_session.h>
 
+#include <boost/asio/awaitable.hpp>
+#include <boost/asio/co_spawn.hpp>
+#include <boost/asio/consign.hpp>
+#include <boost/asio/deferred.hpp>
+#include <boost/asio/detached.hpp>
+#include <boost/asio/io_context.hpp>
+#include <boost/asio/redirect_error.hpp>
+#include <boost/asio/signal_set.hpp>
+#include <boost/asio/use_awaitable.hpp>
+#include <boost/redis/connection.hpp>
+#include <boost/redis/logger.hpp>
+#include <boost/smart_ptr/make_shared_object.hpp>
 #include <boost/uuid/uuid.hpp>
+
+using signal_set = boost::asio::deferred_t::as_default_on_t<boost::asio::signal_set>;
 
 using namespace copper;
 
-state::state() : id_(boost::uuids::random_generator()()) {}
+state::state(const boost::shared_ptr<boost::asio::io_context>& io_context,
+             const boost::shared_ptr<state_configuration>& configuration)
+    : io_context_(io_context),
+      configuration_(configuration),
+      id_(boost::uuids::random_generator()()) {}
 
 void state::join(websocket_session* session) {
   std::lock_guard lock(mutex_);
@@ -32,4 +50,54 @@ void state::broadcast(const boost::uuids::uuid id, std::string data) {
 
   for (auto const& wp : v)
     if (auto sp = wp.lock()) sp->send(ss);
+}
+
+auto state::receiver(const boost::shared_ptr<boost::redis::connection> connection)
+    -> boost::asio::awaitable<void> {
+  boost::redis::request req;
+  req.push("SUBSCRIBE", "channel");
+
+  boost::redis::generic_response resp;
+
+  connection->set_receive_response(resp);
+
+  while (connection->will_reconnect()) {
+    co_await connection->async_exec(req, boost::redis::ignore, boost::asio::deferred);
+
+    for (boost::system::error_code ec;;) {
+      connection->receive(ec);
+
+      if (ec == boost::redis::error::sync_receive_push_failed) {
+        ec = {};
+
+        co_await connection->async_receive(redirect_error(boost::asio::use_awaitable, ec));
+      }
+
+      if (ec) break;
+
+      if (resp.value().at(1).value != "subscribe") {  // ignore subscribe
+        std::cout << resp.value().at(1).value << " " << resp.value().at(2).value << " "
+                  << resp.value().at(3).value << std::endl;
+      }
+
+      boost::redis::consume_one(resp);
+    }
+  }
+}
+
+auto state::co_receiver(boost::redis::config redis_configuration) -> boost::asio::awaitable<void> {
+  auto ex = co_await boost::asio::this_coro::executor;
+  auto connection = boost::make_shared<boost::redis::connection>(ex);
+  co_spawn(ex, receiver(connection), boost::asio::detached);
+  connection->async_run(redis_configuration, {}, consign(boost::asio::detached, connection));
+  signal_set sig_set(ex, SIGINT, SIGTERM);
+  co_await sig_set.async_wait();
+  connection->cancel();
+}
+
+void state::detach_receiver() const {
+  co_spawn(*io_context_, co_receiver(configuration_->redis_configuration_),
+           [](const std::exception_ptr& error) {
+             if (error) std::rethrow_exception(error);
+           });
 }

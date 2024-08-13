@@ -1,6 +1,20 @@
 #pragma once
 
+#include <boost/asio/awaitable.hpp>
+#include <boost/asio/co_spawn.hpp>
+#include <boost/asio/consign.hpp>
+#include <boost/asio/deferred.hpp>
+#include <boost/asio/detached.hpp>
+#include <boost/asio/io_context.hpp>
+#include <boost/asio/redirect_error.hpp>
+#include <boost/asio/signal_set.hpp>
+#include <boost/asio/use_awaitable.hpp>
+#include <boost/redis/adapter/detail/adapters.hpp>
+#include <boost/redis/config.hpp>
+#include <boost/redis/connection.hpp>
+#include <boost/redis/logger.hpp>
 #include <boost/smart_ptr.hpp>
+#include <boost/smart_ptr/make_shared_object.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <mutex>
 #include <unordered_set>
@@ -8,19 +22,22 @@
 namespace copper {
   class websocket_session;
 
-  struct state_config {
+  class state_configuration {
+  public:
     std::string service_host_;
     unsigned short service_port_;
     int service_threads_;
     std::string redis_host_;
     unsigned short redis_port_;
+    boost::redis::config redis_configuration_;
   };
 
   /**
    * @brief Program shared state
    */
   class state : public boost::enable_shared_from_this<state> {
-    state_config config_;
+    boost::shared_ptr<boost::asio::io_context> io_context_;
+    boost::shared_ptr<state_configuration> configuration_;
     boost::uuids::uuid id_;
     std::mutex mutex_;
     std::unordered_set<websocket_session*> sessions_;
@@ -29,7 +46,8 @@ namespace copper {
     /**
      * @brief Creates a new instance
      */
-    state();
+    state(const boost::shared_ptr<boost::asio::io_context>& io_context,
+          const boost::shared_ptr<state_configuration>& configuration);
 
     /**
      * @brief Retrieves the instance identifier
@@ -56,9 +74,22 @@ namespace copper {
     void broadcast(boost::uuids::uuid id, std::string data);
 
     /**
-     * @brief Set state configuration
-     * @param config State configuration
+     * @brief Detach receiver
      */
-    void set_config(const state_config& config) { this->config_ = config; }
+    void detach_receiver() const;
+
+    /**
+     * @brief Connection callback
+     * @param redis_configuration Redis configuration
+     */
+    auto static co_receiver(boost::redis::config redis_configuration)
+        -> boost::asio::awaitable<void>;
+
+    /**
+     * @brief Receiver infinite loop
+     * @param connection Redis connection
+     */
+    auto static receiver(boost::shared_ptr<boost::redis::connection> connection)
+        -> boost::asio::awaitable<void>;
   };
 }  // namespace copper

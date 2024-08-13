@@ -7,8 +7,10 @@
 TEST_CASE("State") {
   using namespace copper;
 
-  auto first_state_ = std::make_shared<state>();
-  auto second_state_ = std::make_shared<state>();
+  auto io_context_ = boost::make_shared<boost::asio::io_context>();
+  auto configuration_ = boost::make_shared<state_configuration>();
+  auto first_state_ = std::make_shared<state>(io_context_, configuration_);
+  auto second_state_ = std::make_shared<state>(io_context_, configuration_);
 
   CHECK_NE(first_state_->get_id(), second_state_->get_id());
 }
