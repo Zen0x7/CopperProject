@@ -59,17 +59,32 @@
             <li>
               Reference
               <ul>
+                <li><a href="#pub-static-methods">Public static functions</a></li>
                 <li><a href="#typeless-methods">Constructors, destructors, conversion operators</a></li>
                 <li><a href="#pub-methods">Public functions</a></li>
+                <li><a href="#pub-attribs">Public variables</a></li>
               </ul>
             </li>
           </ul>
         </nav>
+        <section id="pub-static-methods">
+          <h2><a href="#pub-static-methods">Public static functions</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">static auto <a href="#a67960648371aee40c073d2ecec2bb92d" class="m-doc">co_receiver</a>(</span><span class="m-doc-wrap">boost::redis::config redis_configuration) -&gt; boost::asio::awaitable&lt;void&gt;</span>
+            </dt>
+            <dd>Connection callback.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">static auto <a href="#a1c3aad8c2f241e70a41a899b6c22b8de" class="m-doc">receiver</a>(</span><span class="m-doc-wrap">boost::shared_ptr&lt;boost::redis::connection&gt; connection) -&gt; boost::asio::awaitable&lt;void&gt;</span>
+            </dt>
+            <dd>Receiver infinite loop.</dd>
+          </dl>
+        </section>
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
-            <dt id="ade9065b3ae51853130f2e31e880e6202">
-              <span class="m-doc-wrap-bumper"><a href="#ade9065b3ae51853130f2e31e880e6202" class="m-doc-self">state</a>(</span><span class="m-doc-wrap">)</span>
+            <dt id="a25f93898d643f331d660db6155409b45">
+              <span class="m-doc-wrap-bumper"><a href="#a25f93898d643f331d660db6155409b45" class="m-doc-self">state</a>(</span><span class="m-doc-wrap">const boost::shared_ptr&lt;<a href="classcopper_1_1state__configuration.html" class="m-doc">state_<wbr />configuration</a>&gt;&amp; configuration)</span>
             </dt>
             <dd>Creates a new instance.</dd>
           </dl>
@@ -94,14 +109,61 @@
               std::string data)</span>
             </dt>
             <dd>Broadcast a session message.</dd>
-            <dt>
-              <span class="m-doc-wrap-bumper">void <a href="#a5cd231f5edf40c2673dc91ec0c9f45f7" class="m-doc">set_config</a>(</span><span class="m-doc-wrap">const <a href="structcopper_1_1state__config.html" class="m-doc">state_<wbr />config</a>&amp; config)</span>
+            <dt id="af91b1e58cf243de605f1939dca3529c2">
+              <span class="m-doc-wrap-bumper">void <a href="#af91b1e58cf243de605f1939dca3529c2" class="m-doc-self">detach_receiver</a>(</span><span class="m-doc-wrap">) const</span>
             </dt>
-            <dd>Set state configuration.</dd>
+            <dd>Detach receiver.</dd>
+          </dl>
+        </section>
+        <section id="pub-attribs">
+          <h2><a href="#pub-attribs">Public variables</a></h2>
+          <dl class="m-doc">
+            <dt id="aced3a1f7c62ba0df66c2508a33b165c0">
+              boost::asio::io_context <a href="#aced3a1f7c62ba0df66c2508a33b165c0" class="m-doc-self">io_context_</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="aec37d38c8b9e2eec29ed8edd40e01197">
+              boost::shared_ptr&lt;boost::redis::connection&gt; <a href="#aec37d38c8b9e2eec29ed8edd40e01197" class="m-doc-self">redis_connection_</a>
+            </dt>
+            <dd><span></span></dd>
           </dl>
         </section>
         <section>
           <h2>Function documentation</h2>
+          <section class="m-doc-details" id="a67960648371aee40c073d2ecec2bb92d"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">static boost::asio::awaitable&lt;void&gt; copper::<wbr />state::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a67960648371aee40c073d2ecec2bb92d" class="m-doc-self">co_receiver</a>(</span><span class="m-doc-wrap">boost::redis::config redis_configuration)</span></span>
+            </h3>
+            <p>Connection callback.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">redis_configuration</td>
+                  <td>Redis configuration</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a1c3aad8c2f241e70a41a899b6c22b8de"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">static boost::asio::awaitable&lt;void&gt; copper::<wbr />state::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a1c3aad8c2f241e70a41a899b6c22b8de" class="m-doc-self">receiver</a>(</span><span class="m-doc-wrap">boost::shared_ptr&lt;boost::redis::connection&gt; connection)</span></span>
+            </h3>
+            <p>Receiver infinite loop.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">connection</td>
+                  <td>Redis connection</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
           <section class="m-doc-details" id="a2baf3f55d07b9acdb8da6ddbf794cdfd"><div>
             <h3>
               <span class="m-doc-wrap-bumper">void copper::<wbr />state::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a2baf3f55d07b9acdb8da6ddbf794cdfd" class="m-doc-self">join</a>(</span><span class="m-doc-wrap"><a href="classcopper_1_1websocket__session.html" class="m-doc">websocket_<wbr />session</a>* session)</span></span>
@@ -154,23 +216,6 @@
                 <tr>
                   <td>data</td>
                   <td>Payload</td>
-                </tr>
-              </tbody>
-            </table>
-          </div></section>
-          <section class="m-doc-details" id="a5cd231f5edf40c2673dc91ec0c9f45f7"><div>
-            <h3>
-              <span class="m-doc-wrap-bumper">void copper::<wbr />state::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a5cd231f5edf40c2673dc91ec0c9f45f7" class="m-doc-self">set_config</a>(</span><span class="m-doc-wrap">const <a href="structcopper_1_1state__config.html" class="m-doc">state_<wbr />config</a>&amp; config)</span></span>
-            </h3>
-            <p>Set state configuration.</p>
-            <table class="m-table m-fullwidth m-flat">
-              <thead>
-                <tr><th colspan="2">Parameters</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="width: 1%">config</td>
-                  <td>State configuration</td>
                 </tr>
               </tbody>
             </table>
