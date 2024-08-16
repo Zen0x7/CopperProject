@@ -2,20 +2,6 @@
 #include <copper/state.h>
 #include <copper/websocket_session.h>
 
-#include <boost/asio/awaitable.hpp>
-#include <boost/asio/co_spawn.hpp>
-#include <boost/asio/consign.hpp>
-#include <boost/asio/deferred.hpp>
-#include <boost/asio/detached.hpp>
-#include <boost/asio/io_context.hpp>
-#include <boost/asio/redirect_error.hpp>
-#include <boost/asio/signal_set.hpp>
-#include <boost/asio/use_awaitable.hpp>
-#include <boost/redis/connection.hpp>
-#include <boost/redis/logger.hpp>
-#include <boost/smart_ptr/make_shared_object.hpp>
-#include <boost/uuid/uuid.hpp>
-
 using signal_set = boost::asio::deferred_t::as_default_on_t<boost::asio::signal_set>;
 
 using namespace copper;

@@ -14,9 +14,6 @@
 #include <boost/asio/redirect_error.hpp>
 #include <boost/asio/signal_set.hpp>
 #include <boost/asio/use_awaitable.hpp>
-#include <boost/redis/connection.hpp>
-#include <boost/redis/logger.hpp>
-#include <boost/redis/src.hpp>
 #include <boost/smart_ptr/make_shared_object.hpp>
 #include <boost/stacktrace.hpp>
 #include <boost/thread.hpp>

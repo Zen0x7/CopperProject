@@ -9,13 +9,10 @@
 #include <boost/asio/redirect_error.hpp>
 #include <boost/asio/signal_set.hpp>
 #include <boost/asio/use_awaitable.hpp>
-#include <boost/redis/adapter/detail/adapters.hpp>
-#include <boost/redis/config.hpp>
-#include <boost/redis/error.hpp>
-#include <boost/redis/connection.hpp>
-#include <boost/redis/logger.hpp>
+#include <boost/redis.hpp>
 #include <boost/smart_ptr.hpp>
 #include <boost/smart_ptr/make_shared_object.hpp>
+#include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <mutex>
 #include <unordered_set>
