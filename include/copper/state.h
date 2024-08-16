@@ -34,18 +34,18 @@ namespace copper {
    * @brief Program shared state
    */
   class state : public boost::enable_shared_from_this<state> {
-    boost::shared_ptr<boost::asio::io_context> io_context_;
     boost::shared_ptr<state_configuration> configuration_;
     boost::uuids::uuid id_;
     std::mutex mutex_;
     std::unordered_set<websocket_session*> sessions_;
 
   public:
+    boost::asio::io_context io_context_;
+
     /**
      * @brief Creates a new instance
      */
-    state(const boost::shared_ptr<boost::asio::io_context>& io_context,
-          const boost::shared_ptr<state_configuration>& configuration);
+    state(const boost::shared_ptr<state_configuration>& configuration);
 
     /**
      * @brief Retrieves the instance identifier

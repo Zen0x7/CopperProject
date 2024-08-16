@@ -80,7 +80,7 @@ auto main(int argc, char** argv) -> int {
     ("h,help", "Show help")
     ("v,version", "Print the current version number")
     ("service_address", "Service address", cxxopts::value(configuration_->service_host_)->default_value("0.0.0.0"))
-    ("service_port", "Service port", cxxopts::value(configuration_->service_port_)->default_value("9000"))
+    ("service_port", "Service port", cxxopts::value(configuration_->service_port_)->default_value("5000"))
     ("service_threads", "Service threads", cxxopts::value(configuration_->service_threads_)->default_value("4"))
     ("redis_host", "Redis host", cxxopts::value(configuration_->redis_host_)->default_value("0.0.0.0"))
     ("redis_port", "Redis port", cxxopts::value(configuration_->redis_port_)->default_value("6379"))
@@ -102,29 +102,27 @@ auto main(int argc, char** argv) -> int {
   auto service_address_ = boost::asio::ip::make_address(configuration_->service_host_);
   auto threads_number_ = std::max(1, configuration_->service_threads_);
 
-  auto io_context_ = boost::make_shared<boost::asio::io_context>();
-
   configuration_->redis_configuration_.addr.host = configuration_->redis_host_;
   configuration_->redis_configuration_.addr.port = std::to_string(configuration_->redis_port_);
-  auto state_ = boost::make_shared<state>(io_context_, configuration_);
+  auto state_ = boost::make_shared<state>(configuration_);
 
   state_->detach_receiver();
 
   boost::make_shared<listener>(
-      *io_context_, boost::asio::ip::tcp::endpoint{service_address_, configuration_->service_port_},
-      state_)
+      state_->io_context_,
+      boost::asio::ip::tcp::endpoint{service_address_, configuration_->service_port_}, state_)
       ->run();
 
-  boost::asio::signal_set signals(*io_context_, SIGINT, SIGTERM);
+  boost::asio::signal_set signals(state_->io_context_, SIGINT, SIGTERM);
   signals.async_wait(
-      [&io_context_](boost::system::error_code const&, int) { io_context_->stop(); });
+      [&state_](boost::system::error_code const&, int) { state_->io_context_.stop(); });
 
   std::vector<std::thread> threads_;
   threads_.reserve(threads_number_ - 1);
   for (auto i = threads_number_ - 1; i > 0; --i)
-    threads_.emplace_back([&io_context_] { io_context_->run(); });
+    threads_.emplace_back([&state_] { state_->io_context_.run(); });
 
-  io_context_->run();
+  state_->io_context_.run();
 
   for (auto& thread : threads_) thread.join();
 

@@ -189,12 +189,11 @@ TEST_CASE("Serve") {
   unsigned short port_ = 7500;
 
   auto configuration_ = boost::make_shared<state_configuration>();
-  auto server_io_context_ = boost::shared_ptr<boost::asio::io_context>();
   boost::asio::io_context client_io_context_;
 
-  auto state_ = boost::make_shared<state>(server_io_context_, configuration_);
+  auto state_ = boost::make_shared<state>(configuration_);
 
-  boost::make_shared<listener>(*server_io_context_, boost::asio::ip::tcp::endpoint{address_, port_},
+  boost::make_shared<listener>(state_->io_context_, boost::asio::ip::tcp::endpoint{address_, port_},
                                state_)
       ->run();
 
@@ -206,7 +205,7 @@ TEST_CASE("Serve") {
 
   boost::make_shared<websocket_client>(client_io_context_)->run(host_, "7500", "EHLO");
 
-  boost::thread server_runner([&server_io_context_] { server_io_context_->run(); });
+  boost::thread server_runner([&state_] { state_->io_context_.run(); });
   boost::thread client_runner([&client_io_context_] { client_io_context_.run(); });
 
   server_runner.detach();
@@ -217,7 +216,7 @@ TEST_CASE("Serve") {
 
   std::this_thread::sleep_for(std::chrono::seconds(1));
 
-  server_io_context_->stop();
+  state_->io_context_.stop();
   client_io_context_.stop();
 
   std::this_thread::sleep_for(std::chrono::seconds(1));
