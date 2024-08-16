@@ -193,6 +193,8 @@ TEST_CASE("Serve") {
 
   auto state_ = boost::make_shared<state>(configuration_);
 
+  state_->detach_receiver();
+
   boost::make_shared<listener>(state_->io_context_, boost::asio::ip::tcp::endpoint{address_, port_},
                                state_)
       ->run();
@@ -207,6 +209,9 @@ TEST_CASE("Serve") {
 
   boost::thread server_runner([&state_] { state_->io_context_.run(); });
   boost::thread client_runner([&client_io_context_] { client_io_context_.run(); });
+
+  state_->redis_connection_->async_run(configuration_->redis_configuration_, {},
+                                       boost::asio::detached);
 
   server_runner.detach();
 
