@@ -11,6 +11,7 @@
 #include <boost/asio/use_awaitable.hpp>
 #include <boost/redis/adapter/detail/adapters.hpp>
 #include <boost/redis/config.hpp>
+#include <boost/redis/error.hpp>
 #include <boost/redis/connection.hpp>
 #include <boost/redis/logger.hpp>
 #include <boost/smart_ptr.hpp>
