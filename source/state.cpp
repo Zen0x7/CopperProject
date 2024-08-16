@@ -83,11 +83,8 @@ auto state::co_receiver(boost::redis::config redis_configuration) -> boost::asio
 }
 
 void state::detach_receiver() const {
-  boost::asio::co_spawn(redis_connection_->get_executor(),
-                        co_receiver(configuration_->redis_configuration_),
-                        [](const std::exception_ptr& error) {
-                          if (error) std::rethrow_exception(error);
-                        });
-
+  // clang-format off
+  boost::asio::co_spawn(redis_connection_->get_executor(), co_receiver(configuration_->redis_configuration_), [](const std::exception_ptr& error) { if (error) std::rethrow_exception(error); });
+  // clang-format on
   redis_connection_->async_run(configuration_->redis_configuration_, {}, boost::asio::detached);
 }
