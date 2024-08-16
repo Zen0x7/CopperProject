@@ -9,7 +9,9 @@ using signal_set = boost::asio::deferred_t::as_default_on_t<boost::asio::signal_
 using namespace copper;
 
 state::state(const boost::shared_ptr<state_configuration>& configuration)
-    : configuration_(configuration), id_(boost::uuids::random_generator()()) {}
+    : configuration_(configuration),
+      id_(boost::uuids::random_generator()()),
+      redis_connection_(boost::make_shared<boost::redis::connection>(io_context_)) {}
 
 void state::join(websocket_session* session) {
   std::lock_guard lock(mutex_);
@@ -81,8 +83,9 @@ auto state::co_receiver(boost::redis::config redis_configuration) -> boost::asio
 }
 
 void state::detach_receiver() const {
-  // co_spawn(io_context_, co_receiver(configuration_->redis_configuration_),
-  //          [](const std::exception_ptr& error) {
-  //            if (error) std::rethrow_exception(error);
-  //          });
+  boost::asio::co_spawn(redis_connection_->get_executor(),
+                        co_receiver(configuration_->redis_configuration_),
+                        [](const std::exception_ptr& error) {
+                          if (error) std::rethrow_exception(error);
+                        });
 }

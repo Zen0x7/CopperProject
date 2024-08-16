@@ -40,7 +40,8 @@ namespace copper {
     std::unordered_set<websocket_session*> sessions_;
 
   public:
-    boost::asio::io_context io_context_;
+    boost::asio::io_context io_context_{1};
+    boost::shared_ptr<boost::redis::connection> redis_connection_;
 
     /**
      * @brief Creates a new instance

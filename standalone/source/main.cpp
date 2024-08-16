@@ -83,7 +83,7 @@ auto main(int argc, char** argv) -> int {
     ("service_port", "Service port", cxxopts::value(configuration_->service_port_)->default_value("5000"))
     ("service_threads", "Service threads", cxxopts::value(configuration_->service_threads_)->default_value("4"))
     ("redis_host", "Redis host", cxxopts::value(configuration_->redis_host_)->default_value("0.0.0.0"))
-    ("redis_port", "Redis port", cxxopts::value(configuration_->redis_port_)->default_value("6379"))
+    ("redis_port", "Redis port", cxxopts::value(configuration_->redis_port_)->default_value("6380"))
   ;
   // clang-format on
 
@@ -114,14 +114,18 @@ auto main(int argc, char** argv) -> int {
       ->run();
 
   boost::asio::signal_set signals(state_->io_context_, SIGINT, SIGTERM);
-  signals.async_wait(
-      [&state_](boost::system::error_code const&, int) { state_->io_context_.stop(); });
+  signals.async_wait([&state_](boost::system::error_code const&, int) {
+    state_->redis_connection_->cancel();
+    state_->io_context_.stop();
+  });
 
   std::vector<std::thread> threads_;
   threads_.reserve(threads_number_ - 1);
   for (auto i = threads_number_ - 1; i > 0; --i)
     threads_.emplace_back([&state_] { state_->io_context_.run(); });
 
+  state_->redis_connection_->async_run(configuration_->redis_configuration_, {},
+                                       boost::asio::detached);
   state_->io_context_.run();
 
   for (auto& thread : threads_) thread.join();
