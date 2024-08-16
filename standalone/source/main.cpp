@@ -14,9 +14,6 @@
 #include <boost/asio/redirect_error.hpp>
 #include <boost/asio/signal_set.hpp>
 #include <boost/asio/use_awaitable.hpp>
-#include <boost/redis/connection.hpp>
-#include <boost/redis/logger.hpp>
-#include <boost/redis/src.hpp>
 #include <boost/smart_ptr/make_shared_object.hpp>
 #include <boost/stacktrace.hpp>
 #include <boost/thread.hpp>
@@ -76,17 +73,17 @@ auto main(int argc, char** argv) -> int {
 
   cxxopts::Options options(*argv, "A program to welcome the world!");
 
-  state_config config = {};
+  auto configuration_ = boost::make_shared<state_configuration>();
 
   // clang-format off
   options.add_options()
     ("h,help", "Show help")
     ("v,version", "Print the current version number")
-    ("service_address", "Service address", cxxopts::value(config.service_host_)->default_value("0.0.0.0"))
-    ("service_port", "Service port", cxxopts::value(config.service_port_)->default_value("9000"))
-    ("service_threads", "Service threads", cxxopts::value(config.service_threads_)->default_value("4"))
-    ("redis_host", "Redis host", cxxopts::value(config.redis_host_)->default_value("0.0.0.0"))
-    ("redis_port", "Redis port", cxxopts::value(config.redis_port_)->default_value("6379"))
+    ("service_address", "Service address", cxxopts::value(configuration_->service_host_)->default_value("0.0.0.0"))
+    ("service_port", "Service port", cxxopts::value(configuration_->service_port_)->default_value("5000"))
+    ("service_threads", "Service threads", cxxopts::value(configuration_->service_threads_)->default_value("4"))
+    ("redis_host", "Redis host", cxxopts::value(configuration_->redis_host_)->default_value("0.0.0.0"))
+    ("redis_port", "Redis port", cxxopts::value(configuration_->redis_port_)->default_value("6380"))
   ;
   // clang-format on
 
@@ -102,37 +99,32 @@ auto main(int argc, char** argv) -> int {
     return EXIT_SUCCESS;
   }
 
-  auto service_address_ = boost::asio::ip::make_address(config.service_host_);
-  auto threads_number_ = std::max(1, config.service_threads_);
+  auto service_address_ = boost::asio::ip::make_address(configuration_->service_host_);
+  auto threads_number_ = std::max(1, configuration_->service_threads_);
 
-  boost::asio::io_context io_context_;
+  configuration_->redis_configuration_.addr.host = configuration_->redis_host_;
+  configuration_->redis_configuration_.addr.port = std::to_string(configuration_->redis_port_);
+  auto state_ = boost::make_shared<state>(configuration_);
 
-  auto state_ = boost::make_shared<state>();
-
-  state_->set_config(config);
-
-  boost::redis::config cfg;
-
-  cfg.addr.host = config.redis_host_;
-  cfg.addr.port = std::to_string(config.redis_port_);
-
-  co_spawn(io_context_, co_receiver(cfg), [](const std::exception_ptr& error) {
-    if (error) std::rethrow_exception(error);
-  });
+  state_->detach_receiver();
 
   boost::make_shared<listener>(
-      io_context_, boost::asio::ip::tcp::endpoint{service_address_, config.service_port_}, state_)
+      state_->io_context_,
+      boost::asio::ip::tcp::endpoint{service_address_, configuration_->service_port_}, state_)
       ->run();
 
-  boost::asio::signal_set signals(io_context_, SIGINT, SIGTERM);
-  signals.async_wait([&io_context_](boost::system::error_code const&, int) { io_context_.stop(); });
+  boost::asio::signal_set signals(state_->io_context_, SIGINT, SIGTERM);
+  signals.async_wait([&state_](boost::system::error_code const&, int) {
+    state_->redis_connection_->cancel();
+    state_->io_context_.stop();
+  });
 
   std::vector<std::thread> threads_;
   threads_.reserve(threads_number_ - 1);
   for (auto i = threads_number_ - 1; i > 0; --i)
-    threads_.emplace_back([&io_context_] { io_context_.run(); });
+    threads_.emplace_back([&state_] { state_->io_context_.run(); });
 
-  io_context_.run();
+  state_->io_context_.run();
 
   for (auto& thread : threads_) thread.join();
 

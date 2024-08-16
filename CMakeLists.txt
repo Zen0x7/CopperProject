@@ -46,8 +46,10 @@ file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/
 
 # Note: for header-only libraries change all PUBLIC flags to INTERFACE and create an interface
 # target: add_library(${PROJECT_NAME} INTERFACE)
-add_library(${PROJECT_NAME} ${headers} ${sources})
-set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 26)
+add_library(${PROJECT_NAME} redis.cpp ${headers} ${sources})
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
+
+find_package(OpenSSL REQUIRED)
 
 find_package(
   Boost 1.85.0
@@ -59,7 +61,7 @@ find_package(
 target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
 
 # Link dependencies
-target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt termcolor ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt termcolor OpenSSL::SSL ${Boost_LIBRARIES})
 
 target_include_directories(
   ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>

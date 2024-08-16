@@ -25,6 +25,11 @@ else()
   CPMAddPackage(NAME Copper SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 endif()
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(OpenSSL REQUIRED)
+
 find_package(
   Boost 1.85.0
   COMPONENTS json thread program_options random coroutine
@@ -35,8 +40,10 @@ find_package(
 
 file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} doctest::doctest Copper::Copper termcolor ${Boost_LIBRARIES})
-set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
+target_link_libraries(
+  ${PROJECT_NAME} doctest::doctest Copper::Copper termcolor OpenSSL::SSL ${Boost_LIBRARIES}
+)
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 
 # enable compiler warnings
 if(NOT TEST_INSTALLED_VERSION)
