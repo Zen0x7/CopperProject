@@ -4,6 +4,8 @@
 
 #include <boost/asio/strand.hpp>
 
+#include "copper/state_container.h"
+
 using signal_set = boost::asio::deferred_t::as_default_on_t<boost::asio::signal_set>;
 
 using namespace copper;
@@ -36,13 +38,21 @@ void state::broadcast(const boost::uuids::uuid id, std::string data) {
   }
 
   for (auto const& wp : v)
-    if (auto sp = wp.lock()) sp->send(ss);
+    if (auto sp = wp.lock())
+      if (sp->get_id() != id) sp->send(ss);
 }
 
 auto state::receiver(const boost::shared_ptr<boost::redis::connection> connection)
     -> boost::asio::awaitable<void> {
+  auto state_instance_ = state_container::get_instance();
+  std::string registration_message = "state_registration:";
+
+  registration_message.append(to_string(state_instance_->get_id()));
+
   boost::redis::request req;
-  req.push("SUBSCRIBE", "channel");
+  req.push("SUBSCRIBE", "state");
+  req.push("PUBLISH", "state", registration_message);
+  req.push("SUBSCRIBE", to_string(state_instance_->get_id()));
 
   boost::redis::generic_response resp;
 
@@ -63,6 +73,7 @@ auto state::receiver(const boost::shared_ptr<boost::redis::connection> connectio
       if (ec) break;
 
       if (resp.value().at(1).value != "subscribe") {  // ignore subscribe
+
         std::cout << resp.value().at(1).value << " " << resp.value().at(2).value << " "
                   << resp.value().at(3).value << std::endl;
       }
@@ -84,7 +95,7 @@ auto state::co_receiver(boost::redis::config redis_configuration) -> boost::asio
 
 void state::detach_receiver() const {
   // clang-format off
-  boost::asio::co_spawn(redis_connection_->get_executor(), co_receiver(configuration_->redis_configuration_), [](const std::exception_ptr& error) { if (error) std::rethrow_exception(error); });
+  co_spawn(redis_connection_->get_executor(), co_receiver(configuration_->redis_configuration_), [](const std::exception_ptr& error) { if (error) std::rethrow_exception(error); });
   // clang-format on
   redis_connection_->async_run(configuration_->redis_configuration_, {}, boost::asio::detached);
 }

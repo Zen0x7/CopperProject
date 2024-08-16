@@ -60,6 +60,8 @@ namespace copper {
      */
     void send(boost::shared_ptr<std::string const> const& data);
 
+    boost::uuids::uuid get_id() const { return id_; }
+
   private:
     /**
      * @brief Writes an event
