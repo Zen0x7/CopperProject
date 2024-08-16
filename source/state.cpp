@@ -88,4 +88,6 @@ void state::detach_receiver() const {
                         [](const std::exception_ptr& error) {
                           if (error) std::rethrow_exception(error);
                         });
+
+  redis_connection_->async_run(configuration_->redis_configuration_, {}, boost::asio::detached);
 }

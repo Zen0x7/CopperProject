@@ -124,8 +124,6 @@ auto main(int argc, char** argv) -> int {
   for (auto i = threads_number_ - 1; i > 0; --i)
     threads_.emplace_back([&state_] { state_->io_context_.run(); });
 
-  state_->redis_connection_->async_run(configuration_->redis_configuration_, {},
-                                       boost::asio::detached);
   state_->io_context_.run();
 
   for (auto& thread : threads_) thread.join();

@@ -210,9 +210,6 @@ TEST_CASE("Serve") {
   boost::thread server_runner([&state_] { state_->io_context_.run(); });
   boost::thread client_runner([&client_io_context_] { client_io_context_.run(); });
 
-  state_->redis_connection_->async_run(configuration_->redis_configuration_, {},
-                                       boost::asio::detached);
-
   server_runner.detach();
 
   std::this_thread::sleep_for(std::chrono::seconds(1));
